@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { MainLayout } from "../components/layouts/MainLayout";
 import { 
@@ -12,6 +11,8 @@ import {
   XCircle
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
+import { useTheme } from "@/hooks/useTheme";
 
 interface Service {
   id: number;
@@ -31,6 +32,7 @@ const Explore = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<"popular" | "newest" | "price-asc" | "price-desc">("popular");
+  const { theme } = useTheme();
   
   const categories = [
     "متابعين",
@@ -41,7 +43,6 @@ const Explore = () => {
     "إحصائيات"
   ];
   
-  // Example services data
   const allServices: Service[] = [
     {
       id: 1,
@@ -107,7 +108,6 @@ const Explore = () => {
     }
   ];
 
-  // Apply filters and search
   const filteredServices = allServices
     .filter(service => 
       (selectedCategory ? service.category === selectedCategory : true) &&
@@ -137,7 +137,8 @@ const Explore = () => {
         <h1 className="text-xl font-bold">استكشاف الخدمات</h1>
       </div>
       
-      <div className="glass-effect rounded-2xl p-4 mb-6">
+      <div className={cn("rounded-2xl p-4 mb-6", 
+        theme === 'dark' ? "glass-effect" : "light-glass-effect")}>
         <div className="relative">
           <Search className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
           <input
@@ -209,7 +210,8 @@ const Explore = () => {
       {filteredServices.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredServices.map((service) => (
-            <Link key={service.id} to={`/service/${service.id}`} className="service-card">
+            <Link key={service.id} to={`/service/${service.id}`} className={cn("service-card", 
+              theme === 'dark' ? "" : "light-card")}>
               <div className="relative aspect-video overflow-hidden">
                 <img
                   src={service.image}
@@ -244,17 +246,19 @@ const Explore = () => {
                 <div className="flex justify-between items-center">
                   <div className="flex gap-1">
                     {service.tags.map((tag, i) => (
-                      <span key={i} className="text-xs px-2 py-0.5 bg-accent rounded-full">{tag}</span>
+                      <span key={i} className={cn("text-xs px-2 py-0.5 rounded-full", 
+                        theme === 'dark' ? "bg-accent" : "bg-slate-200")}>{tag}</span>
                     ))}
                   </div>
-                  <p className="font-bold text-primary">${service.price}</p>
+                  <p className="font-bold text-primary">{service.price} د.ل</p>
                 </div>
               </div>
             </Link>
           ))}
         </div>
       ) : (
-        <div className="glass-effect rounded-2xl p-8 text-center">
+        <div className={cn("rounded-2xl p-8 text-center", 
+          theme === 'dark' ? "glass-effect" : "light-glass-effect")}>
           <h3 className="font-bold text-lg mb-2">لا توجد نتائج</h3>
           <p className="text-muted-foreground mb-4">لا توجد خدمات تطابق معايير البحث الخاصة بك.</p>
           <button

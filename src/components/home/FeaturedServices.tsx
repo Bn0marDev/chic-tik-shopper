@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { ChevronRight, Flame, Star, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
+import { useTheme } from "@/hooks/useTheme";
 
 interface Service {
   id: number;
@@ -17,6 +19,7 @@ interface Service {
 
 export function FeaturedServices() {
   const [imgLoaded, setImgLoaded] = useState<Record<string, boolean>>({});
+  const { theme } = useTheme();
   
   const services: Service[] = [
     {
@@ -83,12 +86,14 @@ export function FeaturedServices() {
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {services.map((service) => (
-          <Link key={service.id} to={`/service/${service.id}`} className="service-card">
+          <Link key={service.id} to={`/service/${service.id}`} className={cn("service-card", 
+            theme === 'dark' ? "" : "light-card")}>
             <div className="relative aspect-[4/3] overflow-hidden">
               <img
                 src={service.image}
                 alt={service.title}
-                className={`object-cover w-full h-full transition-all duration-700 ${imgLoaded[service.id] ? 'img-loaded' : 'img-loading'}`}
+                className={cn("object-cover w-full h-full transition-all duration-700", 
+                  imgLoaded[service.id] ? 'img-loaded' : 'img-loading')}
                 onLoad={() => handleImageLoad(service.id)}
               />
               
@@ -119,10 +124,11 @@ export function FeaturedServices() {
               <div className="flex justify-between items-center">
                 <div className="flex gap-1">
                   {service.tags.map((tag, i) => (
-                    <span key={i} className="text-xs px-2 py-0.5 bg-accent rounded-full">{tag}</span>
+                    <span key={i} className={cn("text-xs px-2 py-0.5 rounded-full", 
+                      theme === 'dark' ? "bg-accent" : "bg-slate-200")}>{tag}</span>
                   ))}
                 </div>
-                <p className="font-bold text-primary">${service.price}</p>
+                <p className="font-bold text-primary">{service.price} د.ل</p>
               </div>
             </div>
           </Link>

@@ -1,56 +1,98 @@
 
-import { ShoppingBag, Bell, Search } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { Menu, X, ShoppingCart, Sun, Moon, User } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useTheme } from "@/hooks/useTheme";
 
 export function TopBar() {
-  const [showSearch, setShowSearch] = useState(false);
-
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+  const { theme, toggleTheme } = useTheme();
+  
+  const navLinks = [
+    { path: "/", label: "الرئيسية" },
+    { path: "/explore", label: "استكشاف" },
+    { path: "/premium", label: "المميزة" }
+  ];
+  
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  
   return (
-    <header className="sticky top-0 z-40 w-full">
-      <div className="bg-card/80 backdrop-blur-lg border-b border-border">
-        <div className="container flex h-16 items-center justify-between px-4">
-          <div className="flex items-center gap-2">
-            <Link to="/" className="flex items-center gap-2">
-              <ShoppingBag className="h-6 w-6 text-primary" />
-              <span className="font-bold text-xl tracking-tight">تيك بازار</span>
-            </Link>
-          </div>
-
-          {showSearch ? (
-            <div className="absolute inset-0 flex items-center justify-center bg-card/95 px-4 animate-fade-in">
-              <div className="relative w-full max-w-md">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <input
-                  type="search"
-                  placeholder="البحث عن خدمات..."
-                  className="w-full bg-accent py-2 px-10 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-muted-foreground/70"
-                  autoFocus
-                  onBlur={() => setShowSearch(false)}
-                />
-                <button
-                  onClick={() => setShowSearch(false)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-                >
-                  إلغاء
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className="flex items-center gap-4">
-              <button onClick={() => setShowSearch(true)} className="button-icon">
-                <Search className="h-5 w-5" />
-              </button>
-              <Link to="/notifications" className="button-icon relative">
-                <Bell className="h-5 w-5" />
-                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold">
-                  3
-                </span>
+    <header className={cn("sticky top-0 z-50 w-full py-3 border-b border-border backdrop-blur-md", 
+      theme === 'dark' ? "bg-background/80" : "bg-white/80")}>
+      <div className="container flex items-center justify-between">
+        <div className="flex items-center gap-x-4">
+          <button 
+            onClick={toggleMenu}
+            className="lg:hidden button-icon"
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          >
+            {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+          
+          <Link to="/" className="text-xl font-bold text-primary">TikBoost</Link>
+          
+          <nav className="hidden lg:flex items-center gap-x-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={cn(
+                  "nav-link px-4 py-2 rounded-lg",
+                  location.pathname === link.path && "active"
+                )}
+              >
+                {link.label}
               </Link>
-            </div>
-          )}
+            ))}
+          </nav>
+        </div>
+        
+        <div className="flex items-center gap-x-2">
+          <button
+            onClick={toggleTheme}
+            className="button-icon"
+            aria-label={theme === 'dark' ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </button>
+          
+          <Link to="/cart" className="button-icon">
+            <ShoppingCart className="h-5 w-5" />
+          </Link>
+          
+          <Link to="/profile" className="button-icon">
+            <User className="h-5 w-5" />
+          </Link>
         </div>
       </div>
+      
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className={cn("fixed inset-0 z-50 w-full h-full mt-14", 
+          theme === 'dark' ? "bg-background/80 backdrop-blur-md" : "bg-white/80 backdrop-blur-md")}>
+          <div className="container py-4">
+            <nav className="flex flex-col gap-y-3">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  onClick={toggleMenu}
+                  className={cn(
+                    "flex items-center gap-2 px-4 py-2 text-lg rounded-lg transition-colors",
+                    location.pathname === link.path
+                      ? "bg-primary/10 text-primary font-medium"
+                      : "hover:bg-accent/40"
+                  )}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

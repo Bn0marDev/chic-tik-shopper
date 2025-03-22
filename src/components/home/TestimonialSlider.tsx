@@ -1,6 +1,8 @@
 
 import { useState, useEffect } from "react";
 import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useTheme } from "@/hooks/useTheme";
 
 interface Testimonial {
   id: number;
@@ -15,6 +17,7 @@ export function TestimonialSlider() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState<'left' | 'right'>('right');
   const [imagesLoaded, setImagesLoaded] = useState<Record<string, boolean>>({});
+  const { theme } = useTheme();
   
   const testimonials: Testimonial[] = [
     {
@@ -84,20 +87,23 @@ export function TestimonialSlider() {
       <h2 className="text-xl font-bold text-center mb-8">ماذا يقول عملاؤنا</h2>
       
       <div className="relative max-w-3xl mx-auto">
-        <div className="absolute inset-0 bg-primary opacity-5 blur-3xl rounded-full"></div>
+        <div className={cn("absolute inset-0 opacity-5 blur-3xl rounded-full", 
+          theme === 'dark' ? "bg-primary" : "bg-primary")}></div>
         
-        <div className="relative overflow-hidden glass-effect rounded-2xl p-6 sm:p-8">
+        <div className={cn("relative overflow-hidden rounded-2xl p-6 sm:p-8",
+          theme === 'dark' ? "glass-effect" : "light-glass-effect")}>
           {testimonials.map((testimonial, index) => (
             <div
               key={testimonial.id}
-              className={`transition-all duration-500 absolute inset-0 p-6 sm:p-8 ${
+              className={cn(
+                "transition-all duration-500 absolute inset-0 p-6 sm:p-8",
                 index === activeIndex
                   ? "opacity-100 translate-x-0"
                   : "opacity-0 " +
                     (direction === "right"
                       ? "translate-x-full"
                       : "-translate-x-full")
-              }`}
+              )}
               style={{ display: index === activeIndex ? "block" : "none" }}
             >
               <div className="flex flex-col sm:flex-row gap-6 items-center">
@@ -106,7 +112,7 @@ export function TestimonialSlider() {
                     <img
                       src={testimonial.avatar}
                       alt={testimonial.name}
-                      className={`w-full h-full object-cover ${imagesLoaded[testimonial.id] ? 'img-loaded' : 'img-loading'}`}
+                      className={cn("w-full h-full object-cover", imagesLoaded[testimonial.id] ? 'img-loaded' : 'img-loading')}
                       onLoad={() => handleImageLoad(testimonial.id)}
                     />
                   </div>
@@ -121,11 +127,11 @@ export function TestimonialSlider() {
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
-                        className={`h-4 w-4 ${
+                        className={cn("h-4 w-4",
                           i < testimonial.rating
                             ? "fill-yellow-500 text-yellow-500"
                             : "text-muted-foreground"
-                        }`}
+                        )}
                       />
                     ))}
                   </div>
@@ -141,7 +147,7 @@ export function TestimonialSlider() {
         <div className="flex justify-center mt-5 gap-2">
           <button
             onClick={handlePrev}
-            className="button-icon bg-accent/50 hover:bg-accent"
+            className={cn("button-icon", theme === 'dark' ? "bg-accent/50 hover:bg-accent" : "bg-secondary/80 hover:bg-secondary")}
             aria-label="Previous testimonial"
           >
             <ChevronLeft className="h-5 w-5" />
@@ -155,11 +161,12 @@ export function TestimonialSlider() {
                   setDirection(index < activeIndex ? 'left' : 'right');
                   setActiveIndex(index);
                 }}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                className={cn(
+                  "h-2 rounded-full transition-all duration-300",
                   index === activeIndex
                     ? "bg-primary w-6"
-                    : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
-                }`}
+                    : "bg-muted-foreground/30 hover:bg-muted-foreground/50 w-2"
+                )}
                 aria-label={`Go to testimonial ${index + 1}`}
               />
             ))}
@@ -167,7 +174,7 @@ export function TestimonialSlider() {
           
           <button
             onClick={handleNext}
-            className="button-icon bg-accent/50 hover:bg-accent"
+            className={cn("button-icon", theme === 'dark' ? "bg-accent/50 hover:bg-accent" : "bg-secondary/80 hover:bg-secondary")}
             aria-label="Next testimonial"
           >
             <ChevronRight className="h-5 w-5" />

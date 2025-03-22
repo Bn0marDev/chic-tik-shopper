@@ -5,35 +5,65 @@
 
 @layer base {
   :root {
-    --background: 230 20% 8%;
-    --foreground: 210 40% 98%;
-
-    --card: 230 20% 11%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 230 20% 9%;
-    --popover-foreground: 210 40% 98%;
-
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    
     --primary: 217 91% 60%;
     --primary-foreground: 210 40% 98%;
+    
+    --secondary: 240 5.9% 90%;
+    --secondary-foreground: 240 5.9% 30%;
+    
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 217 91% 60%;
+    
+    --radius: 1rem;
+  }
 
+  .dark {
+    --background: 230 20% 8%;
+    --foreground: 210 40% 98%;
+    
+    --card: 230 20% 11%;
+    --card-foreground: 210 40% 98%;
+    
+    --popover: 230 20% 9%;
+    --popover-foreground: 210 40% 98%;
+    
+    --primary: 217 91% 60%;
+    --primary-foreground: 210 40% 98%;
+    
     --secondary: 240 5.9% 20%;
     --secondary-foreground: 210 40% 98%;
-
+    
     --muted: 240 5.9% 16%;
     --muted-foreground: 215 20.2% 75.1%;
-
+    
     --accent: 240 5.9% 18%;
     --accent-foreground: 210 40% 98%;
-
+    
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-
+    
     --border: 240 5.9% 15%;
     --input: 240 5.9% 14%;
     --ring: 217 91% 60%;
-
-    --radius: 1rem;
   }
 }
 
@@ -57,8 +87,16 @@
     @apply overflow-hidden relative bg-card rounded-2xl border border-border/40 transition-all duration-300 hover:scale-[1.02] hover:border-primary/20 hover:shadow-premium;
   }
   
+  .light-card {
+    @apply bg-white border-slate-200/60 shadow-sm hover:shadow-md;
+  }
+  
   .glass-effect {
     @apply bg-white/5 backdrop-blur-md border border-white/10 shadow-premium;
+  }
+  
+  .light-glass-effect {
+    @apply bg-white/80 backdrop-blur-md border border-slate-200/60 shadow-sm;
   }
   
   .nav-link {
@@ -108,4 +146,41 @@ html {
 
 .img-loaded {
   @apply blur-0 scale-100;
+}
+
+/* Terminal compatibility */
+@media screen and (max-width: 640px), screen and (max-height: 480px) {
+  .container {
+    @apply px-2;
+  }
+  
+  .button-icon {
+    @apply h-8 w-8;
+  }
+  
+  h1, h2, h3 {
+    @apply text-base;
+  }
+  
+  p, span {
+    @apply text-sm;
+  }
+  
+  .text-xs {
+    @apply text-[10px];
+  }
+}
+
+/* Dark mode toggle animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.theme-toggle-icon {
+  animation: spin 0.5s ease-in-out;
 }

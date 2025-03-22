@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { MobileBottomNav } from "../navigation/MobileBottomNav";
 import { TopBar } from "../navigation/TopBar";
+import { cn } from "@/lib/utils";
+import { useTheme } from "@/hooks/useTheme";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -11,6 +13,7 @@ interface MainLayoutProps {
 export function MainLayout({ children }: MainLayoutProps) {
   const location = useLocation();
   const [isPageChanged, setIsPageChanged] = useState(false);
+  const { theme } = useTheme();
   
   // Effect for page transition animation
   useEffect(() => {
@@ -23,7 +26,8 @@ export function MainLayout({ children }: MainLayoutProps) {
   }, [location.pathname]);
 
   return (
-    <div className="flex flex-col min-h-screen overflow-hidden bg-background">
+    <div className={cn("flex flex-col min-h-screen overflow-hidden",
+      theme === 'dark' ? "bg-background" : "bg-slate-50")}>
       <TopBar />
       
       <main className="flex-1 container px-4 py-4 pb-20 relative">
